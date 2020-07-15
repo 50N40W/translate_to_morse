@@ -10,12 +10,18 @@ From the file
 
  thus "LETTERS" contains our Morse alphabet, numbers, and some special 
  characters, all represented as 1's and 3's
+
 LETTERS = [13, 3111, 3131, 311, 1, 1131, 331, 1111, 11, 11333, 313, # a-k
-        1131, 33, 31, 333, 1331, 3313, 131, 111, 3, 113, 1113,      # L-V
-        133, 3113, 3133, 3311, 6,                                   # W-Z, gap
-        33333, 13333, 11333, 11133, 11113, 11111,                   # 0-5
-        31111, 33111, 33311, 33331, 33333,                          # 6-9
-        131313, 331133, 113311, 31131, 133131]     # contents of SPECIAL_CHARS
+
+1131, 33, 31, 333, 1331, 3313, 131, 111, 3, 113, 1113,      # L-V
+
+133, 3113, 3133, 3311, 6,                                   # W-Z, gap
+
+33333, 13333, 11333, 11133, 11113, 11111,                   # 0-5
+
+31111, 33111, 33311, 33331, 33333,                          # 6-9
+
+131313, 331133, 113311, 31131, 133131]     # contents of SPECIAL_CHARS
         
 these are the non a-z and 0-9 characters we want to translate. 
 They correspond to the end (last line) of LETTERS
