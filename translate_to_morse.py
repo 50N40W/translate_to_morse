@@ -1,18 +1,28 @@
 import time
-#import sys
+import numpy as np
+import simpleaudio as sa
 
-#import ossaudiodev
-
-#if you don't want to install pygame, and are running windows ...
+#for windows, can use the winsound implementation
 #import winsound
+
+#  2020 07 15   Howard Bishop
+#  BSD clause 2 license
+#  Plays a MSG in Morse, both audio and visual
+#  Have not verified if simpleaudio works on windows
+#     but winsound does NOT work on linux :-)
+#  Dependencies: as indicated in the imports
+#  To do:
+#   1.  detect OS and switch which method is used to play beep.
+#   2. Maybe add a gui for tone freq, wpm, msg, and num. or repetitions
+
 
 #MSG is where you enter the string you want to see translated.
 # could be more elaborate, but this is the uninteresting part :-)
 MSG = 'using lower case, write some letters or 2 or 3 numbers. ok? hihi'
 DIT_MILLISECONDS = 100
+DIT_SECONDS = DIT_MILLISECONDS/1000
 FREQ = 700
 HOW_MANY_TIMES = 3
-
 
 # I am way too lazy to do the "a = .-" thing, so ...
 #  making a dah 3x the length of a dit, we can use the ASCII order 
@@ -37,6 +47,29 @@ SPECIAL_CHARS = ['.', ',', '?', '/', '@']
 #  these are arbitrary. could just as easily be pigs and buffalo.  Try it.
 #ON_SCREEN = [' ', 'pig.', ' ', 'BUFFALO.', ' ', '  ', 'X']
 ON_SCREEN = [' ', '.', ' ', '-', ' ', '  ', 'X']
+
+
+def linux_beep(dah_or_dit_time):
+    """ making a linux compatible variable duration beep  Cribbed from: 
+    https://simpleaudio.readthedocs.io/
+    en/latest/tutorial.html#playing-audio-directly
+    This is a pretty crude implementation """
+    fs = 44100
+    seconds = 1  # Note duration of 3 seconds
+
+    # Generate array with seconds*sample_rate steps, ranging between 0 and seconds
+    t = np.linspace(0, seconds, seconds * fs, False)
+    note = np.sin(FREQ * t * 2 * np.pi)
+    
+    # Ensure that highest value is in 16-bit range
+    audio = note * (2**15 - 1) / np.max(np.abs(note))
+    # Convert to 16-bit data
+    audio = audio.astype(np.int16)
+    
+    # Start playback
+    play_obj = sa.play_buffer(audio, 1, 2, fs)
+    time.sleep(dah_or_dit_time)
+    play_obj.stop()
 
 def get_ordinal(inChar):
     """ return an index value from the letter ordinality """
@@ -70,9 +103,11 @@ if __name__ == '__main__':
                 for s in range(0, len(sonic)):
                     dah_dit = int(sonic[s])
                     print(ON_SCREEN[dah_dit], end="")
+                    linux_beep(dah_dit*DIT_SECONDS)
+                    #for windows, can use the winsound instead of linux_beep
                     #winsound.Beep(FREQ, dah_dit*DIT_MILLISECONDS)
+                    time.sleep(DIT_SECONDS*3)
                 print(" ", end="")
                 time.sleep(0.4)
-                #x = ord
     print(" ")
     print("-Done-")
